@@ -10,8 +10,16 @@
 #import "APIManager.h"
 #import "AppDelegate.h"
 #import "LoginViewController.h"
+#import "TweetCell.h"
+#import "Tweet.h"
 
-@interface TimelineViewController ()
+@interface TimelineViewController () <UITableViewDelegate, UITableViewDataSource>
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) NSMutableArray *arrayOfTweets; // property, bc it is a thing... duh.... + type and name; getter and setter array
+// nonatomic, strong, defines the getter and setter
+@property (nonatomic, strong) UIRefreshControl *refreshControl; // established variable
+//@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -20,10 +28,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.dataSource = self; // setting it to the view controller
+    self.tableView.delegate = self; // expecting it
+    
+    
+    // refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    
+    [self.refreshControl addTarget:self action:@selector(loadTweets) forControlEvents:UIControlEventValueChanged]; // under the hood, target action pair, calling a particular method
+    [self.tableView insertSubview:self.refreshControl atIndex:0];
+    [self.tableView addSubview:self.refreshControl];
+    
+    [self loadTweets];
+    
+}
+
+- (IBAction)onLogout:(id)sender {
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //  Logging out feature guide
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    appDelegate.window.rootViewController = loginViewController;
+    
+    [[APIManager shared] logout];
+}
+
+- (void) loadTweets {
+    
+
     // Get timeline
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             NSLog(@"😎😎😎 Successfully loaded home timeline");
+            self.arrayOfTweets = tweets;
             for (NSDictionary *dictionary in tweets) {
                 NSString *text = dictionary[@"text"];
                 NSLog(@"%@", text);
@@ -32,6 +70,9 @@
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
         }
     }];
+    [self loadTweets];
+    
+
 }
 
 - (void)loggedOut {
@@ -50,6 +91,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.arrayOfTweets.count;
+}
 /*
 #pragma mark - Navigation
 
