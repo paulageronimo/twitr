@@ -52,6 +52,7 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 
 - (void)getHomeTimelineWithCompletion:(void(^)(NSArray *tweets, NSError *error))completion {
     
+    // array of tweets
     [self GET:@"1.1/statuses/home_timeline.json"
        parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
            // Success

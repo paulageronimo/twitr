@@ -15,7 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *username;
 @property (weak, nonatomic) IBOutlet UILabel *tweetDate;
+@property (weak, nonatomic) IBOutlet UILabel *tweetText;
 
+@property (weak, nonatomic) IBOutlet UILabel *favCount;
+@property (weak, nonatomic) IBOutlet UILabel *replyCount;
+@property (weak, nonatomic) IBOutlet UILabel *retweetCount;
+
+// need to add buttons as buttons, not UI Image view...
 @end
 
 NS_ASSUME_NONNULL_END
