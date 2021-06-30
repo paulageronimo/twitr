@@ -12,7 +12,6 @@
 #import "LoginViewController.h"
 #import "TweetCell.h"
 #import "Tweet.h"
-#import "UIImageView+AFNetworking.h"
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -98,50 +97,38 @@
 }
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    TweetCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TweetCell" forIndexPath:indexPath];
+    TweetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TweetCell"];
         
-    Tweet *tweet = self.arrayOfTweets[indexPath.row];
-    // from TweetCell.h
-    // UIImageView *profilePicture;UILabel *name;UILabel *username; UILabel *tweetDate;UILabel *tweetText;UILabel *favCount;UIButton *favButton;UILabel *replyCount;IBOutlet UIButton *replyButton;UILabel *retweetCount;UIButton *retweetButton; UIButton *messageButton;
+    NSDictionary *movie = self.movies[indexPath.row];
+    cell.titleLabel.text = movie[@"title"];
+    cell.synopsisLabel.text = movie[@"overview"];
+// previous formatting:
+    //    NSLog(@"%@", [NSString stringWithFormat:@"row:%d, section %d", indexPath.row, indexPath.section]);
+//    cell.textLabel.text = [NSString stringWithFormat:@"row:%d, section %d", indexPath.row, indexPath.section];
+    //NSLog: outputs within the log box...
+    //cell.textLabel.text = movie[@"title"];
+    NSString *baseURLString = @"https://image.tmdb.org/t/p/w500";
+    NSString *posterURLString = movie[@"poster_path"];
+    // glue the above together :)
+    NSString *fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
     
-    // from User.h
-    //  NSString *name; NSString *screenName; NSString *profilePicture;
-
-    
-    cell.name.text = tweet.user.name;
-    cell.username.text = [@"@" stringByAppendingString:tweet.user.screenName];
-    cell.tweetDate.text = tweet.createdAtString;
-    cell.tweetText.text = tweet.text;
-    cell.retweetCount.text = [NSString stringWithFormat:@"%i", tweet.retweetCount];
-    cell.favCount.text = [NSString stringWithFormat:@"%i", tweet.favoriteCount];
-    
-//    cell.favButton.selected = ;
-//    cell.retweetButton.selected = ;
-    
-
-    NSString *URLString = tweet.user.profilePicture;
-    NSString *imgURLString = [URLString stringByReplacingOccurrencesOfString:@"_normal" withString:@""];
-    
-    NSURL *pfpURL = [NSURL URLWithString:imgURLString]; // same as a string, but it checks to see if it is a valid URL
-    
-    cell.profilePicture.image = nil; // blanks cell before downloading new one
-    [cell.profilePicture setImageWithURL:pfpURL];
-    
+    NSURL *posterURL = [NSURL URLWithString:fullPosterURLString]; // same as a string, but it checks to see if it is a valid URL
+    cell.posterView.image = nil; // blanks cell before downloading new one
+    [cell.posterView setImageWithURL:posterURL];
     return cell;
 }
-//#pragma mark - Navigation
 
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//// Get the new view controller using [segue destinationViewController].
-//// Pass the selected object to the new view controller.
-//    UITableViewCell *tappedCell = sender;
-//    // "hey table view, I have this cell of yours. Can you tell me the index path? pls n ty"
-//    NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
-//    NSDictionary *movie = self.arrayOfTweets[indexPath.row];
-//
-//    DetailsViewController *detailViewController = [segue destinationViewController];
-//    detailViewController.tweets = tweets;
-//}
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+// Get the new view controller using [segue destinationViewController].
+// Pass the selected object to the new view controller.
+    UITableViewCell *tappedCell = sender;
+    // "hey table view, I have this cell of yours. Can you tell me the index path? pls n ty"
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
+    NSDictionary *movie = self.arrayOfTweets[indexPath.row];
+    
+    DetailsViewController *detailViewController = [segue destinationViewController];
+    detailViewController.tweets = tweets;
+}
 
 /*
  #pragma mark - Navigation
