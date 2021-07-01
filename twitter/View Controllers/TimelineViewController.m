@@ -13,6 +13,8 @@
 #import "TweetCell.h"
 #import "Tweet.h"
 #import "UIImageView+AFNetworking.h"
+#import "InfiniteScrollActivityView.h"
+
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -20,6 +22,8 @@
 @property (nonatomic, strong) NSMutableArray *arrayOfTweets;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 //@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (assign, nonatomic) BOOL isMoreDataLoading;
+@property (nonatomic, strong) InfiniteScrollActivityView *loadingMoreView;
 
 @end
 
@@ -27,20 +31,32 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
     [self setupView];
     [self loadTweets];
     
 }
 
 - (void) setupView {
-    self.tableView.dataSource = self;
-    self.tableView.delegate = self;
-    
     self.refreshControl = [[UIRefreshControl alloc] init];
-    
     [self.refreshControl addTarget:self action:@selector(loadTweets) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
+    
+    // Set up Infinite Scroll loading indicator
+    CGRect frame = CGRectMake(0, self.tableView.contentSize.height, self.tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight);
+    self.loadingMoreView = [[InfiniteScrollActivityView alloc] initWithFrame:frame];
+    self.loadingMoreView.hidden = true;
+    [self.tableView addSubview:self.loadingMoreView];
+    
+    UIEdgeInsets insets = self.tableView.contentInset;
+    insets.bottom += InfiniteScrollActivityView.defaultHeight;
+    self.tableView.contentInset = insets;
+    
     [self.tableView addSubview:self.refreshControl];
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     
 }
 
@@ -55,22 +71,43 @@
 }
 
 - (void) loadTweets { // like fetchMovies
+    // Get timeline
     
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
-            NSLog(@"😎😎😎 Successfully loaded home timeline");
             self.arrayOfTweets = (NSMutableArray*)tweets;
-            for (NSDictionary *dictionary in tweets) {
-                NSString *text = dictionary[@"text"];
-                NSLog(@"%@", text);
-            } 
             [self.tableView reloadData];
             [self.refreshControl endRefreshing];
+            [self.tableView reloadData];
+            [self.refreshControl endRefreshing];
+            NSLog(@"😎😎😎 Successfully loaded home timeline");
         } else {
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
         }
     }];
 
+}
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if(!self.isMoreDataLoading){
+        // Calculate the position of one screen length before the bottom of the results
+        int scrollViewContentHeight = self.tableView.contentSize.height;
+        int scrollOffsetThreshold = scrollViewContentHeight - self.tableView.bounds.size.height;
+        
+        // When the user has scrolled past the threshold, start requesting
+        if(scrollView.contentOffset.y > scrollOffsetThreshold && self.tableView.isDragging) {
+            self.isMoreDataLoading = true;
+            
+            // Update position of loadingMoreView, and start loading indicator
+            CGRect frame = CGRectMake(0, self.tableView.contentSize.height, self.tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight);
+            self.loadingMoreView.frame = frame;
+            [self.loadingMoreView startAnimating];
+            
+            // Code to load more results
+            //[self loadMoreData];
+        }
+    }
 }
 
 - (void)loggedOut {
@@ -95,47 +132,31 @@
     TweetCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TweetCell" forIndexPath:indexPath];
         
     Tweet *tweet = self.arrayOfTweets[indexPath.row];
-    // from TweetCell.h
-    // UIImageView *profilePicture;UILabel *name;UILabel *username; UILabel *tweetDate;UILabel *tweetText;UILabel *favCount;UIButton *favButton;UILabel *replyCount;IBOutlet UIButton *replyButton;UILabel *retweetCount;UIButton *retweetButton; UIButton *messageButton;
-    
-    // from User.h
-    //  NSString *name; NSString *screenName; NSString *profilePicture;
-
     
     cell.name.text = tweet.user.name;
-    cell.username.text = [@"@" stringByAppendingString:tweet.user.screenName];
+    cell.username.text = tweet.user.screenName;
     cell.tweetDate.text = tweet.createdAtString;
     cell.tweetText.text = tweet.text;
-    cell.retweetCount.text = [NSString stringWithFormat:@"%i", tweet.retweetCount];
-    cell.favCount.text = [NSString stringWithFormat:@"%i", tweet.favoriteCount];
+    NSString *favoriteCount = [NSString stringWithFormat:@"%i", tweet.retweetCount];
+    NSString *retweetCount = [NSString stringWithFormat:@"%i", tweet.favoriteCount];
     
-//    cell.favButton.selected = ;
-//    cell.retweetButton.selected = ;
-    
+    [cell.favButton setTitle:favoriteCount forState:UIControlStateNormal];
+    [cell.retweetButton setTitle:retweetCount forState:UIControlStateNormal];
 
     NSString *URLString = tweet.user.profilePicture;
     NSString *imgURLString = [URLString stringByReplacingOccurrencesOfString:@"_normal" withString:@""];
+
+    NSURL *pfpURL = [NSURL URLWithString:imgURLString];
     
-    NSURL *pfpURL = [NSURL URLWithString:imgURLString]; // same as a string, but it checks to see if it is a valid URL
-    
+//    NSString *URLString = tweet.user.profilePicture;
+//    NSURL *url = [NSURL URLWithString:URLString];
+//    NSData *urlData = [NSData dataWithContentsOfURL:url];
+//
     cell.profilePicture.image = nil; // blanks cell before downloading new one
     [cell.profilePicture setImageWithURL:pfpURL];
     
     return cell;
 }
-//#pragma mark - Navigation
-
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//// Get the new view controller using [segue destinationViewController].
-//// Pass the selected object to the new view controller.
-//    UITableViewCell *tappedCell = sender;
-//    // "hey table view, I have this cell of yours. Can you tell me the index path? pls n ty"
-//    NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
-//    NSDictionary *movie = self.arrayOfTweets[indexPath.row];
-//
-//    DetailsViewController *detailViewController = [segue destinationViewController];
-//    detailViewController.tweets = tweets;
-//}
 
 //
 // #pragma mark - Navigation
