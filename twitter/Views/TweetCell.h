@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Tweet.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TweetCell : UITableViewCell <UITableViewDelegate, UITableViewDataSource>
+@interface TweetCell : UITableViewCell
+@property (nonatomic, strong) Tweet *tweet;
+
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicture;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *username;
@@ -18,17 +21,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *tweetText;
 
 @property (weak, nonatomic) IBOutlet UILabel *favCount;
+@property (weak, nonatomic) IBOutlet UILabel *retweetCount;
 @property (weak, nonatomic) IBOutlet UIButton *favButton;
+@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
 
 //@property (weak, nonatomic) IBOutlet UILabel *replyCount;
 //@property (weak, nonatomic) IBOutlet UIButton *replyButton;
 
-@property (weak, nonatomic) IBOutlet UILabel *retweetCount;
-@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
 
-@property (weak, nonatomic) IBOutlet UIButton *messageButton;
+// @property (weak, nonatomic) IBOutlet UIButton *messageButton;
 
-// need to add buttons as buttons, not UI Image view...
 @end
 
 NS_ASSUME_NONNULL_END
