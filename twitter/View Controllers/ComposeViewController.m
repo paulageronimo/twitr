@@ -7,8 +7,11 @@
 //
 
 #import "ComposeViewController.h"
+#import "APIManager.h"
 
 @interface ComposeViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *tweetText;
+@property (weak, nonatomic) IBOutlet UILabel *charCount;
 
 @end
 
@@ -17,6 +20,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (IBAction)onClose:(id)sender {
     [self dismissViewControllerAnimated:true completion:nil];
 }
 

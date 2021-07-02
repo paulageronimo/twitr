@@ -38,5 +38,22 @@
     // TODO: Send a POST request to the POST favorites/create endpoint
 }
 // buttons for retweet
+//self.tweet.favorited = !self.tweet.favorited;
+//
+//nullable NSString *couldBeNil = tweet.name;
+//// elvis operator
+//NSString *string = couldBeNil ?: @"";
+//// ternary operator
+//string = couldBeNil != nil ? couldBeNil : @"";
+//
+//// Ternary operator
+//self.tweet.favoriteCount += self.tweet.favorited ? -1 : 1;
+//// ternary operator explained
+//if (self.tweet.favorited ) {
+//    return -1
+//} else {
+//    return 1
+//}
+
 
 @end

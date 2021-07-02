@@ -54,9 +54,10 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 }
 
 - (void)getHomeTimelineWithCompletion:(void(^)(NSArray *tweets, NSError *error))completion {
+    NSDictionary *parameters = @{@"tweet_mode":@"extended"};
     // array of tweets
     [self GET:@"1.1/statuses/home_timeline.json"
-       parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
+       parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
            // Success
            NSMutableArray *tweets  = [Tweet tweetsWithArray:tweetDictionaries];
            completion(tweets, nil);
@@ -66,10 +67,6 @@ static NSString * const baseURLString = @"https://api.twitter.com";
     }];
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-=======
 - (void)postStatusWithText:(NSString *)text completion:(void (^)(Tweet *, NSError *))completion{
     NSString *urlString = @"1.1/statuses/update.json";
     NSDictionary *parameters = @{@"status": text};
@@ -81,8 +78,6 @@ static NSString * const baseURLString = @"https://api.twitter.com";
         completion(nil, error);
     }];
 }
-
->>>>>>> nav-tab_bars
 
 -(void)favorite:(Tweet *)tweet completion:(void (^)(Tweet *, NSError *))completion {
     NSString *urlString = @"1.1/favorites/create.json";
@@ -128,9 +123,4 @@ static NSString * const baseURLString = @"https://api.twitter.com";
     }];
 }
 
-
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
->>>>>>> nav-tab_bars
 @end

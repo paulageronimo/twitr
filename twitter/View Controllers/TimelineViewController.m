@@ -134,7 +134,7 @@
     Tweet *tweet = self.arrayOfTweets[indexPath.row];
     
     cell.name.text = tweet.user.name;
-    cell.username.text = tweet.user.screenName;
+    cell.username.text =  [NSString stringWithFormat:@"%@@", tweet.user.screenName];
     cell.tweetDate.text = tweet.createdAtString;
     cell.tweetText.text = tweet.text;
     NSString *favoriteCount = [NSString stringWithFormat:@"%i", tweet.retweetCount];
@@ -158,14 +158,14 @@
     return cell;
 }
 
-//
-// #pragma mark - Navigation
-//
-// // In a storyboard-based application, you will often want to do a little preparation before navigation
-// - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-// // Get the new view controller using [segue destinationViewController].
-// // Pass the selected object to the new view controller.
-//
-// }
+
+ #pragma mark - Navigation
+
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+
+ }
 
 @end
