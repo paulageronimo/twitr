@@ -13,8 +13,6 @@
  - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
      self = [super init];
      if (self) {
-
-         // Is this a re-tweet?
          NSDictionary *originalTweet = dictionary[@"retweeted_status"];
          if(originalTweet != nil){
              NSDictionary *userDictionary = dictionary[@"user"];
@@ -24,23 +22,19 @@
              dictionary = originalTweet;
          }
          self.idStr = dictionary[@"id_str"];
-//         self.text = dictionary[@"full_text"];
          if([dictionary valueForKey:@"full_text"] != nil) {
-                self.text = dictionary[@"full_text"]; // uses full text if Twitter API provided it
+                self.text = dictionary[@"full_text"];
             } else {
-                self.text = dictionary[@"text"]; // fallback to regular text that Twitter API provided
+                self.text = dictionary[@"text"];
             }
          self.favoriteCount = [dictionary[@"favorite_count"] intValue];
          self.favorited = [dictionary[@"favorited"] boolValue];
          self.retweetCount = [dictionary[@"retweet_count"] intValue];
          self.retweeted = [dictionary[@"retweeted"] boolValue];
          
-         // TODO: initialize user
          NSDictionary *user = dictionary[@"user"];
          self.user = [[User alloc] initWithDictionary:user];
-         // TODO: Format and set createdAtString
          
-         // Format createdAt date string
          NSString *createdAtOriginalString = dictionary[@"created_at"];
          NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
          // Configure the input format to parse the date string

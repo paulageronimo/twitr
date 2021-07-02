@@ -14,7 +14,7 @@
 
 + (instancetype)shared;
 
-- (void)getHomeTimelineWithCompletion:(void(^)(NSArray *tweets, NSError *error))completion;
+- (void)getHomeTimelineWithNum:(NSInteger )tweetAmt completion:(void(^)(NSArray *tweets, NSError *error))completion;
 // favorting a tweet
 - (void)favorite:(Tweet *)tweet completion:(void (^)(Tweet *, NSError *))completion;
 - (void)unfavorite:(Tweet *)tweet completion:(void (^)(Tweet *, NSError *))completion;

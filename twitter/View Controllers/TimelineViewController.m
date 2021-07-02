@@ -74,6 +74,8 @@
     // Get timeline
     
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
+    NSInteger tweetAmt = 20;
+    [[APIManager shared] getHomeTimelineWithNum:tweetAmt completion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             self.arrayOfTweets = (NSMutableArray*)tweets;
             [self.tableView reloadData];
@@ -119,6 +121,11 @@
     [[APIManager shared] logout];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.row + 1 == [self.arrayOfTweets count]){
+        [self loadMoreData:[self.arrayOfTweets count] + 20];
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
