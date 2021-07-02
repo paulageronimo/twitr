@@ -14,7 +14,7 @@
 #import "Tweet.h"
 #import "UIImageView+AFNetworking.h"
 #import "InfiniteScrollActivityView.h"
-
+#import "ComposeViewController.h"
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -70,7 +70,7 @@
     [[APIManager shared] logout];
 }
 
-- (void) loadTweets { // like fetchMovies
+- (void) loadTweets { 
     // Get timeline
     NSInteger tweetAmt = 20;
     [[APIManager shared] getHomeTimelineWithNum:tweetAmt completion:^(NSArray *tweets, NSError *error) {
@@ -87,6 +87,7 @@
     }];
 
 }
+
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -119,11 +120,11 @@
     [[APIManager shared] logout];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.row + 1 == [self.arrayOfTweets count]){
-        [self loadMoreData:[self.arrayOfTweets count] + 20];
-    }
-}
+//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+//    if(indexPath.row + 1 == [self.arrayOfTweets count]){
+//        [self loadMoreData:[self.arrayOfTweets count] + 20];
+//    }
+//}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -170,7 +171,18 @@
  - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
  // Get the new view controller using [segue destinationViewController].
  // Pass the selected object to the new view controller.
-
+     // determine which destination controller to send it to
+         NSString *segId = [segue identifier];
+         NSLog(@"segue identifier: %@", segId);
+         if ([segId isEqualToString:@"compose"]) {
+             UINavigationController *navigationController = [segue destinationViewController];
+             ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
+             composeController.delegate = self;
+         
+         } else {
+             NSLog(@"SEGUE NOT RECOGNIZED");
+         }
+     
  }
 
 @end

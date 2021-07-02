@@ -132,6 +132,9 @@
                                                             <state key="normal" image="favor-icon">
                                                                 <color key="titleColor" systemColor="linkColor"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="didTapFavorite:" destination="ZpH-H0-qj9" eventType="touchUpInside" id="YvU-bF-9uh"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>
@@ -160,6 +163,9 @@
                                                             <state key="normal" image="retweet-icon">
                                                                 <color key="titleColor" systemColor="linkColor"/>
                                                             </state>
+                                                            <connections>
+                                                                <action selector="didTapRetweet:" destination="ZpH-H0-qj9" eventType="touchUpInside" id="boW-Ek-j0r"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>
@@ -229,6 +235,9 @@
                                 <state key="normal" title="LogOut">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="onLogout:" destination="Lbl-k5-U4i" eventType="touchUpInside" id="Tr7-G0-MQB"/>
+                                </connections>
                             </button>
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </barButtonItem>
@@ -268,7 +277,7 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="paperplane" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="IQg-ux-mkh">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="136"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.3371983623" green="0.2297773061" blue="0.4114003919" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" systemColor="linkColor"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="profile-Icon" translatesAutoresizingMaskIntoConstraints="NO" id="Aj1-ke-kg6">
@@ -280,13 +289,9 @@
                                         <rect key="frame" x="0.0" y="295" width="414" height="568"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <imageView key="tableHeaderView" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="qRM-Ru-nXh">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="145" id="tJM-kg-LiI">
-                                                <rect key="frame" x="0.0" y="68.5" width="414" height="145"/>
+                                                <rect key="frame" x="0.0" y="24.5" width="414" height="145"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tJM-kg-LiI" id="DXq-23-rcT">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="145"/>
@@ -309,6 +314,17 @@
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8gC-7L-ktx">
+                                        <rect key="frame" x="20" y="256" width="376" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                        <segments>
+                                            <segment title="Tweets"/>
+                                            <segment title=" Replies"/>
+                                            <segment title="Media"/>
+                                            <segment title="Likes"/>
+                                        </segments>
+                                    </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="30a-UL-DdB"/>
@@ -511,6 +527,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
