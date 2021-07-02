@@ -72,8 +72,6 @@
 
 - (void) loadTweets { // like fetchMovies
     // Get timeline
-    
-    [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
     NSInteger tweetAmt = 20;
     [[APIManager shared] getHomeTimelineWithNum:tweetAmt completion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
